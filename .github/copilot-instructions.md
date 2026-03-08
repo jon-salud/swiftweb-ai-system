@@ -13,8 +13,9 @@ ALWAYS include in `<head>`:
 
 - `<title>` with keyword — Brand format
 - `<meta name="description">` (150-160 chars)
+- `<meta name="robots" content="index, follow">`
 - `<link rel="canonical">`
-- Open Graph meta tags (og:type, og:url, og:title, og:description, og:image)
+- Open Graph meta tags (og:type, og:url, og:title, og:description, og:image, og:locale)
 - Twitter card meta tags
 - `<script type="application/ld+json">` with Schema.org structured data
 - `<meta name="ai-description">` for AI crawler visibility
@@ -27,7 +28,7 @@ NEVER:
 - Use GSAP, AOS, Framer Motion, or any animation library
 - Use scroll event listeners for animations (use IntersectionObserver)
 - Recommend Create React App, Gatsby, Wix, Squarespace
-- Use Inter, Roboto, or Arial as a display/heading font
+- Use Inter, Roboto, Arial, or system-ui as a display/heading font
 - Write images without width and height attributes
 - Animate layout properties (width, height, top, left) — use transform only
 
@@ -94,3 +95,11 @@ Every component should include:
 ## Lighthouse Targets
 
 Performance: 95+  |  Accessibility: 100  |  Best Practices: 100  |  SEO: 100
+
+## TypeScript
+
+- Use TypeScript for all Next.js and Astro projects
+- Use `.ts` for logic files, `.tsx`/`.astro` for components
+- Plain JavaScript is acceptable for simple static HTML sites
+- Enable `strict: true` in `tsconfig.json`
+- Avoid `any` types — use proper type definitions or `unknown`

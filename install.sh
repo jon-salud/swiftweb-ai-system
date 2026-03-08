@@ -50,6 +50,8 @@ if [ -f "$HOME/.zshrc" ]; then
   SHELL_RC="$HOME/.zshrc"
 elif [ -f "$HOME/.bashrc" ]; then
   SHELL_RC="$HOME/.bashrc"
+elif [ -f "$HOME/.bash_profile" ]; then
+  SHELL_RC="$HOME/.bash_profile"
 fi
 
 if [ -n "$SHELL_RC" ]; then
@@ -64,6 +66,19 @@ export SWIFTWEB_DIR="$HOME/.swiftweb"
 # Gemini CLI with SwiftWeb system prompt auto-loaded
 swgem() {
   gemini --system-prompt "$(cat $SWIFTWEB_DIR/gemini-system.md)" "$@"
+}
+
+# Cross-platform clipboard helper
+_swiftweb_copy() {
+  if command -v pbcopy &>/dev/null; then
+    echo "$1" | pbcopy
+  elif command -v xclip &>/dev/null; then
+    echo "$1" | xclip -selection clipboard
+  elif command -v xsel &>/dev/null; then
+    echo "$1" | xsel --clipboard --input
+  else
+    return 1
+  fi
 }
 
 # New client site — prompts for details then generates
@@ -82,7 +97,9 @@ swiftweb-new() {
   echo "────────────────────────────────────────────────────────"
   echo "$PROMPT"
   echo "────────────────────────────────────────────────────────"
-  echo "$PROMPT" | pbcopy 2>/dev/null && echo "(Copied to clipboard)"
+  if _swiftweb_copy "$PROMPT"; then
+    echo "(Copied to clipboard)"
+  fi
 }
 
 # Audit a site
@@ -102,15 +119,44 @@ swiftweb-guidelines() {
 
 # Copy a prompt template
 swiftweb-prompt() {
-  echo "Available templates:"
-  echo "  1) New Site"
-  echo "  2) SEO/AIO Audit"
-  echo "  3) Component"
-  echo "  4) Schema.org"
-  echo "  5) llms.txt"
-  echo "  6) Performance Fix"
-  read -p "Choose (1-6): " choice
-  echo "Template copied — paste into your AI tool"
+  local choice="${1:-}"
+  if [ -z "$choice" ]; then
+    echo "Available templates:"
+    echo "  1) New Site"
+    echo "  2) SEO/AIO Audit"
+    echo "  3) Component"
+    echo "  4) Schema.org"
+    echo "  5) llms.txt"
+    echo "  6) Performance Fix"
+    echo "  7) Migration/Refactoring"
+    read -p "Choose (1-7): " choice
+  fi
+  local template_file="$SWIFTWEB_DIR/templates.md"
+  if [ ! -f "$template_file" ]; then
+    echo "Error: templates file not found at $template_file"
+    return 1
+  fi
+  # Validate input strictly — reject anything that isn't 1-7 (prevents octal/expr errors)
+  if ! echo "$choice" | grep -qE '^[1-7]$'; then
+    echo "Invalid choice. Please enter 1-7."
+    return 1
+  fi
+  # Map number to template heading
+  local headings=("" "TEMPLATE 1" "TEMPLATE 2" "TEMPLATE 3" "TEMPLATE 4" "TEMPLATE 5" "TEMPLATE 6" "TEMPLATE 7")
+  local heading="${headings[$choice]}"
+  # Extract template block: start printing on the matched heading, stop on the next one
+  local content
+  content=$(awk -v heading="$heading" '
+    $0 ~ "^## " heading { printing=1 }
+    printing && $0 ~ "^## TEMPLATE [0-9]" && $0 !~ "^## " heading { exit }
+    printing { print }
+  ' "$template_file")
+  echo ""
+  echo "$content"
+  echo ""
+  if _swiftweb_copy "$content"; then
+    echo "↑ Template $choice copied to clipboard — paste into your AI tool"
+  fi
 }
 # End SwiftWeb
 ALIASES
@@ -131,6 +177,15 @@ cat > "$SWIFTWEB_DIR/new-project.sh" << 'SCAFFOLD'
 # Usage: bash ~/.swiftweb/new-project.sh [project-name]
 
 PROJECT="${1:-client-site}"
+# Overwrite protection — prompt before clobbering existing work
+if [ -d "$PROJECT" ]; then
+  echo "Warning: Directory '$PROJECT' already exists."
+  read -p "Overwrite? This cannot be undone. (y/N): " confirm
+  case "$confirm" in
+    [yY][eE][sS]|[yY]) echo "Proceeding...";;
+    *) echo "Aborting."; exit 1;;
+  esac
+fi
 mkdir -p "$PROJECT"/{public,src/{styles,components,pages}}
 
 # CLAUDE.md in project root
@@ -207,13 +262,33 @@ cat > "$PROJECT/src/styles/tokens.css" << 'TOKENS'
 .reveal-delay-3 { transition-delay: 0.3s; }
 TOKENS
 
-# .vscode/settings.json
+# .vscode/settings.json — embedded to avoid broken relative paths
 mkdir -p "$PROJECT/.vscode"
-cp ~/.swiftweb/../swiftweb-ai-system/.vscode/settings.json "$PROJECT/.vscode/settings.json" 2>/dev/null || true
+cat > "$PROJECT/.vscode/settings.json" << 'VSCODE_SETTINGS'
+{
+  "github.copilot.chat.codeGeneration.instructions": [
+    { "file": ".github/copilot-instructions.md" }
+  ],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "files.associations": {
+    "*.css": "css",
+    "*.html": "html"
+  }
+}
+VSCODE_SETTINGS
 
-# .github/copilot-instructions.md
+# .github/copilot-instructions.md — copy from ~/.swiftweb if present
 mkdir -p "$PROJECT/.github"
-cp ~/.swiftweb/../swiftweb-ai-system/.github/copilot-instructions.md "$PROJECT/.github/copilot-instructions.md" 2>/dev/null || true
+if [ -f "$HOME/.swiftweb/copilot-instructions.md" ]; then
+  cp "$HOME/.swiftweb/copilot-instructions.md" "$PROJECT/.github/copilot-instructions.md"
+else
+  cat > "$PROJECT/.github/copilot-instructions.md" << 'COPILOT_STUB'
+# GitHub Copilot Custom Instructions — SwiftWeb Agency
+# Full instructions not found. Re-run: bash install.sh
+# Refer to SWIFTWEB_GUIDELINES.md in this project root.
+COPILOT_STUB
+fi
 
 echo ""
 echo "✓ SwiftWeb project scaffolded: $PROJECT/"
@@ -374,11 +449,22 @@ SNIPPETS
 
 echo "      ✓ VS Code snippets installed (sw-head, sw-reveal, sw-schema, sw-llms)"
 
+# ── 5b. Copy copilot-instructions.md to ~/.swiftweb for scaffold use ──
+cp .github/copilot-instructions.md "$SWIFTWEB_DIR/copilot-instructions.md"
+echo "      ✓ copilot-instructions.md cached in $SWIFTWEB_DIR"
+
 # ── 6. Lighthouse CI config ───────────────────────────────────────
 echo -e "${GREEN}[6/7]${RESET} Creating Lighthouse CI config template"
 
 cat > "$SWIFTWEB_DIR/lighthouserc.json" << 'LHCI'
 {
+  "_comment_framework": "IMPORTANT: Update startServerCommand and url for your framework. See examples below.",
+  "_examples": {
+    "nextjs":  { "startServerCommand": "npm run build && npm run start", "url": ["http://localhost:3000/"] },
+    "astro":   { "startServerCommand": "npm run build && npm run preview", "url": ["http://localhost:4321/"] },
+    "nuxt":    { "startServerCommand": "npm run build && npm run preview", "url": ["http://localhost:3000/"] },
+    "html":    { "startServerCommand": "npx serve .", "url": ["http://localhost:3000/"] }
+  },
   "ci": {
     "collect": {
       "numberOfRuns": 3,
@@ -432,10 +518,11 @@ echo "  ├── ~/.claude/CLAUDE.md                   ← Claude Code global i
 echo "  └── VS Code snippets (sw-head, sw-reveal, sw-schema, sw-llms)"
 echo ""
 echo "  Shell commands now available (after: source ~/.zshrc):"
-echo "  swgem 'prompt'          → Gemini with SwiftWeb guidelines"
-echo "  swiftweb-new            → New client site prompt generator"
-echo "  swiftweb-audit          → Audit site against standards"
-echo "  swiftweb-guidelines     → View full guidelines"
+echo "  swgem 'prompt'              → Gemini with SwiftWeb guidelines"
+echo "  swiftweb-new                → New client site prompt generator"
+echo "  swiftweb-audit [url]        → Audit site against standards"
+echo "  swiftweb-guidelines         → View full guidelines in pager"
+echo "  swiftweb-prompt [1-7]       → Copy a prompt template to clipboard"
 echo ""
 echo "  New project scaffold:"
 echo "  bash ~/.swiftweb/new-project.sh my-client"

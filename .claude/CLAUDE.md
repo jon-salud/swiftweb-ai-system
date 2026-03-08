@@ -35,12 +35,41 @@ When asked to start a new site, ALWAYS:
 
 When reviewing or editing a site, check:
 
+### Rendering
+
 - Does View Source show full content? (If not — flag as critical issue)
+- Is there a blank `<div id="root">` as the only body content? (Flag: JS-rendered)
+- Is H1 visible in raw HTML source?
+
+### SEO & Meta
+
 - Are meta tags complete and in static HTML?
-- Is there a Schema.org JSON-LD block?
-- Are there animation libraries in package.json? (Flag and offer CSS alternatives)
-- Do images have width/height attributes?
-- Is font-display: swap set?
+- Is `og:locale` set to `en_NZ`?
+- Is `meta name="robots"` present?
+- Is there a `<link rel="canonical">`?
+- Does `robots.txt` allow crawlers and reference the sitemap?
+- Is `sitemap.xml` submitted to Google Search Console and Bing Webmaster Tools?
+
+### Schema & AIO
+
+- Is there a Schema.org JSON-LD block in `<head>`?
+- Is `ai-description` meta tag present?
+- Is `llms.txt` reachable at `/llms.txt` and linked from footer?
+
+### Performance & Animations
+
+- Are there animation libraries in `package.json`? (Flag and offer CSS equivalents)
+- Are scroll effects using IntersectionObserver (not scroll event listeners)?
+- Is `font-display: swap` set on all fonts?
+- Do all images have `width` and `height` attributes?
+- Are scripts deferred or type="module"?
+
+### Accessibility
+
+- Do sections have `aria-labelledby`?
+- Does `<nav>` have `aria-label`?
+- Does `<footer>` have `role="contentinfo"`?
+- Do all images have `alt` attributes?
 
 ## File Structure to Create on Every Project
 
@@ -85,6 +114,24 @@ Sitemap: https://[domain]/sitemap.xml
 
 ## About
 [2-3 paragraphs describing the business in plain English]
+```
+
+## Security & Secrets
+
+NEVER commit secrets or credentials to the repository:
+
+- Always add `.env` and `.env.local` to `.gitignore` before any `git add`
+- Never hardcode API keys, tokens, or passwords in source files
+- Use environment variables for all sensitive values
+- If you see a hardcoded secret, flag it immediately and offer to move it to `.env`
+- Reference secrets in code as `process.env.VARIABLE_NAME` (Next.js/Node) or
+  `import.meta.env.VARIABLE_NAME` (Astro/Vite)
+
+```text
+# .gitignore — always include these
+.env
+.env.local
+.env.*.local
 ```
 
 ## Commit Message Convention

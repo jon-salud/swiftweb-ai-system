@@ -94,16 +94,16 @@ who they serve, where they are, key services. 2-3 sentences.]">
 # [Business Name]
 [Business Name] is a [type] business based in [location], New Zealand.
 
-### Services
+## Services
 - [Service 1]: [one sentence description]
 - [Service 2]: [one sentence description]
 
-### Contact
+## Contact
 - Website: [URL]
 - Phone: [phone]
 - Location: [city], New Zealand
 
-### About
+## About
 [2-3 paragraph plain English description of the business, who they serve,
 and what makes them different.]
 ```
@@ -129,9 +129,11 @@ and what makes them different.]
 - All images: explicit width and height attributes (prevents CLS)
 - Colour contrast: minimum 4.5:1 for normal text, 3:1 for large text
 - All interactive elements keyboard-navigable with visible focus states
-- Custom cursor: pointer-events: none, only activate on pointer: fine devices
+- Custom cursor: if used, set `pointer-events: none` and activate only on
+  `@media (pointer: fine)` to avoid affecting touch/mobile users
 
-**Target: Lighthouse Accessibility = 100**
+> Target: Lighthouse Accessibility = 100
+
 ---
 
 ### 6. PERFORMANCE — LIGHTHOUSE 95+ REQUIRED
@@ -177,7 +179,7 @@ and what makes them different.]
 - No unsized media (images/video without dimensions)
 - Avoid animations that trigger layout (never animate width, height, top, left — use transform)
 
-**Target: LCP < 2.5s, TBT < 200ms, CLS < 0.1, Lighthouse Performance ≥ 95**
+> Target: LCP < 2.5s, TBT < 200ms, CLS < 0.1, Lighthouse Performance ≥ 95
 
 ---
 
@@ -190,16 +192,16 @@ Every SwiftWeb client site must include:
 ```css
 :root {
   /* Brand colours — swap per client */
-  --color-primary: ;
-  --color-accent: ;
-  --color-text: ;
-  --color-bg: ;
-  --color-surface: ;
+  --color-primary:  #000000; /* replace with client primary brand colour */
+  --color-accent:   #000000; /* replace with client accent/highlight colour */
+  --color-text:     #0a0a0f; /* replace with main body text colour */
+  --color-bg:       #ffffff; /* replace with page background colour */
+  --color-surface:  #f5f3ee; /* replace with card/surface background colour */
 
   /* Typography */
-  --font-display: ;   /* Distinctive display font */
-  --font-body: ;      /* Readable body font */
-  --font-mono: ;      /* For labels/metadata */
+  --font-display: 'Font Name', sans-serif;   /* Distinctive display font */
+  --font-body:    'Font Name', sans-serif;   /* Readable body font */
+  --font-mono:    'Font Name', monospace;    /* For labels/metadata */
 
   /* Easing */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);

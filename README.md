@@ -17,10 +17,11 @@ Agency-wide AI compliance for web design projects — one install, every AI tool
 9. [Starting a New Client Project — Step by Step](#9-starting-a-new-client-project--step-by-step)
 10. [Prompt Templates Guide](#10-prompt-templates-guide)
 11. [Lighthouse CI — Automated Quality Checks](#11-lighthouse-ci--automated-quality-checks)
-12. [Updating the Guidelines](#12-updating-the-guidelines)
-13. [How It All Fits Together](#13-how-it-all-fits-together)
-14. [Troubleshooting](#14-troubleshooting)
-15. [FAQ](#15-faq)
+12. [Uninstalling](#12-uninstalling)
+13. [Updating the Guidelines](#13-updating-the-guidelines)
+14. [How It All Fits Together](#14-how-it-all-fits-together)
+15. [Troubleshooting](#15-troubleshooting)
+16. [FAQ](#16-faq)
 
 ---
 
@@ -91,7 +92,7 @@ something is installed, the check command is provided next to each item.
 If you received this as a zip file, unzip it. If you have Git installed:
 
 ```bash
-git clone https://github.com/swiftweb/swiftweb-ai-system.git
+git clone https://github.com/jon-salud/swiftweb-ai-system.git
 cd swiftweb-ai-system
 ```
 
@@ -283,13 +284,14 @@ Use arrow keys to scroll. Press `q` to exit.
 
 ### `swiftweb-prompt` — Browse and copy prompt templates
 
-Shows a numbered menu of the 6 available prompt templates and helps you select
-one to use.
+Shows a numbered menu of the 7 available prompt templates and copies the
+selected template to your clipboard automatically.
 
 **Usage:**
 
 ```bash
-swiftweb-prompt
+swiftweb-prompt        # Interactive menu
+swiftweb-prompt 3      # Jump directly to Template 3
 ```
 
 You will see:
@@ -302,10 +304,12 @@ Available templates:
   4) Schema.org
   5) llms.txt
   6) Performance Fix
-Choose (1-6):
+  7) Migration/Refactoring
+Choose (1-7):
 ```
 
-Type a number and press Enter to get the template.
+Choose a number and the full template text is printed and copied to your
+clipboard. Paste it directly into your AI tool.
 
 ---
 
@@ -529,8 +533,8 @@ template manually.
 
 **How to use:**
 
-1. Run `swiftweb-prompt` in your terminal and choose a template number
-2. Copy the template that appears
+1. Run `swiftweb-prompt` in your terminal and choose a template number (1–7)
+2. The template is printed and copied to your clipboard automatically
 3. Paste it into your AI tool of choice
 4. Fill in the placeholders in `[SQUARE BRACKETS]` with client details
 
@@ -648,11 +652,12 @@ After the AI generates code, run a quick check:
 
 ## 10. Prompt Templates Guide
 
-Six prompt templates live at `~/.swiftweb/templates.md`. Each is a structured
+Seven prompt templates live at `~/.swiftweb/templates.md`. Each is a structured
 prompt designed to get the best results from any AI tool. Access them with:
 
 ```bash
-swiftweb-prompt
+swiftweb-prompt          # Interactive menu — copies selection to clipboard
+swiftweb-prompt 2        # Jump directly to Template 2
 ```
 
 Or open the file directly:
@@ -682,9 +687,11 @@ Paste this template along with the site's raw HTML source (from View Source)
 into any AI tool. The AI will check every item and return a `PASS / FAIL /
 MISSING` report with exact code fixes for each failure.
 
-**Items checked:** static rendering, all meta tags, Schema.org JSON-LD,
-`ai-description` meta, `llms.txt`, animation libraries, `font-display: swap`,
-image dimensions, deferred scripts, semantic HTML, ARIA labels.
+**Items checked:** static rendering, all meta tags (including `og:locale` and
+`meta name="robots"`), Schema.org JSON-LD, `ai-description` meta, `llms.txt`,
+`robots.txt`, sitemap (Google + Bing), animation libraries, `font-display: swap`,
+image dimensions, deferred scripts, semantic HTML, ARIA labels, Lighthouse
+score assertions (LCP, TBT, CLS).
 
 ---
 
@@ -733,6 +740,18 @@ provide the exact code fix for each one.
 
 ---
 
+### Template 7 — Migration & Refactoring
+
+**Use when:** Taking over an existing site that uses animation libraries (GSAP,
+AOS, Framer Motion) and needs to be migrated to CSS-only animations, or when
+content is JS-rendered and needs to be moved to static HTML.
+
+Paste the template with the problematic code. The AI will identify every
+non-compliant pattern, provide the CSS replacement for each animation, and
+confirm which Lighthouse metric improves as a result.
+
+---
+
 ## 11. Lighthouse CI — Automated Quality Checks
 
 Lighthouse is Google's tool for measuring website quality. It checks
@@ -768,6 +787,11 @@ The config file at `~/.swiftweb/lighthouserc.json` is pre-set with SwiftWeb's
 thresholds. If any score falls below the minimum, the command exits with an
 error — useful for blocking deploys in CI/CD pipelines.
 
+> **Framework note:** The default config targets Next.js (port 3000).
+> Update `startServerCommand` and `url` in `lighthouserc.json` for your
+> framework. The file includes commented examples for Next.js, Astro (port 4321),
+> Nuxt, and plain HTML (`npx serve .`).
+
 ### Add to GitHub Actions (optional)
 
 Create `.github/workflows/lighthouse.yml` in your project and add this:
@@ -791,7 +815,28 @@ SwiftWeb minimums.
 
 ---
 
-## 12. Updating the Guidelines
+## 12. Uninstalling
+
+To remove everything installed by this tool:
+
+```bash
+cd /path/to/swiftweb-ai-system
+bash uninstall.sh
+```
+
+This removes:
+
+- `~/.swiftweb/` — all SwiftWeb config files
+- `~/.claude/CLAUDE.md` — global Claude instructions (only if SwiftWeb-authored)
+- `~/.claude/SWIFTWEB_GUIDELINES.md`
+- VS Code `swiftweb.code-snippets` file
+- The SwiftWeb alias block from your shell RC file (`.zshrc` / `.bashrc` / `.bash_profile`)
+
+Your existing projects are not touched.
+
+---
+
+## 13. Updating the Guidelines
 
 The master guidelines file is:
 
@@ -827,7 +872,7 @@ duplicates.
 
 ---
 
-## 13. How It All Fits Together
+## 14. How It All Fits Together
 
 ```text
 SWIFTWEB_GUIDELINES.md              ← Single source of truth
@@ -849,7 +894,7 @@ You maintain one file. Every AI tool reads from it automatically.
 
 ---
 
-## 14. Troubleshooting
+## 15. Troubleshooting
 
 ### `swgem: command not found`
 
@@ -897,11 +942,11 @@ Check that `.github/copilot-instructions.md` exists in the project root:
 ls .github/copilot-instructions.md
 ```
 
-If missing, copy it from the installed location:
+If missing, copy it from the installed SwiftWeb cache:
 
 ```bash
 mkdir -p .github
-cp ~/.swiftweb/../swiftweb-ai-system/.github/copilot-instructions.md .github/
+cp ~/.swiftweb/copilot-instructions.md .github/
 ```
 
 Or run the scaffold script again for the project:
@@ -938,7 +983,7 @@ Run `swiftweb-audit` to check each item systematically.
 
 ---
 
-## 15. FAQ
+## 16. FAQ
 
 **Do I need to run `source ~/.zshrc` every time I open a new terminal?**
 
@@ -984,6 +1029,14 @@ in the project root can also be edited per project.
 Edit `~/.swiftweb/templates.md` directly and add a new `## TEMPLATE N:` section
 following the existing format. The change is immediately available via
 `swiftweb-prompt`.
+
+**Should I commit `.env` files to Git?**
+
+Never. Always add `.env`, `.env.local`, and `.env.*.local` to your `.gitignore`
+before running `git add`. Store API keys and secrets as environment variables,
+not in source code. Reference them in code as `process.env.VARIABLE_NAME`
+(Next.js/Node) or `import.meta.env.VARIABLE_NAME` (Astro/Vite). If you
+accidentally commit a secret, rotate the key immediately.
 
 **What version of Node.js do I need?**
 
