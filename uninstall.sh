@@ -41,7 +41,7 @@ fi
 echo -e "${GREEN}[2/4]${RESET} Removing Claude Code SwiftWeb files"
 if [ -f "$HOME/.claude/CLAUDE.md" ]; then
   # Only remove if it's a SwiftWeb file
-  if grep -q 'SwiftWeb' "$HOME/.claude/CLAUDE.md" 2>/dev/null; then
+  if grep -q '# SwiftWeb Project — Claude Code Instructions' "$HOME/.claude/CLAUDE.md" 2>/dev/null; then
     cp "$HOME/.claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md.swiftweb-backup"
     rm -f "$HOME/.claude/CLAUDE.md"
     echo "      ✓ Removed ~/.claude/CLAUDE.md"
@@ -95,6 +95,10 @@ fi
 echo ""
 echo -e "${YELLOW}${BOLD}  Uninstall complete.${RESET}"
 echo ""
-echo "  To apply alias removal: source $SHELL_RC"
-echo "  Or open a new terminal window."
+if [ -n "$SHELL_RC" ]; then
+  echo "  To apply alias removal: source $SHELL_RC"
+  echo "  Or open a new terminal window."
+else
+  echo "  To apply alias removal, open a new terminal window."
+fi
 echo ""

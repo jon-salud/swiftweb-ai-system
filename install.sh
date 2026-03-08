@@ -136,16 +136,21 @@ swiftweb-prompt() {
     echo "Error: templates file not found at $template_file"
     return 1
   fi
-  # Map number to template heading pattern
-  local headings=("" "TEMPLATE 1" "TEMPLATE 2" "TEMPLATE 3" "TEMPLATE 4" "TEMPLATE 5" "TEMPLATE 6" "TEMPLATE 7")
-  local heading="${headings[$choice]:-}"
-  if [ -z "$heading" ]; then
+  # Validate input strictly — reject anything that isn't 1-7 (prevents octal/expr errors)
+  if ! echo "$choice" | grep -qE '^[1-7]$'; then
     echo "Invalid choice. Please enter 1-7."
     return 1
   fi
-  # Extract template block between its heading and the next heading (or EOF)
+  # Map number to template heading
+  local headings=("" "TEMPLATE 1" "TEMPLATE 2" "TEMPLATE 3" "TEMPLATE 4" "TEMPLATE 5" "TEMPLATE 6" "TEMPLATE 7")
+  local heading="${headings[$choice]}"
+  # Extract template block: start printing on the matched heading, stop on the next one
   local content
-  content=$(awk "/^## $heading/,/^## TEMPLATE [0-9]/{if (/^## TEMPLATE [0-9]/ && !/^## $heading/) exit; print}" "$template_file")
+  content=$(awk -v heading="$heading" '
+    $0 ~ "^## " heading { printing=1 }
+    printing && $0 ~ "^## TEMPLATE [0-9]" && $0 !~ "^## " heading { exit }
+    printing { print }
+  ' "$template_file")
   echo ""
   echo "$content"
   echo ""

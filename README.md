@@ -652,7 +652,7 @@ After the AI generates code, run a quick check:
 
 ## 10. Prompt Templates Guide
 
-Six prompt templates live at `~/.swiftweb/templates.md`. Each is a structured
+Seven prompt templates live at `~/.swiftweb/templates.md`. Each is a structured
 prompt designed to get the best results from any AI tool. Access them with:
 
 ```bash
@@ -830,7 +830,7 @@ This removes:
 - `~/.claude/CLAUDE.md` — global Claude instructions (only if SwiftWeb-authored)
 - `~/.claude/SWIFTWEB_GUIDELINES.md`
 - VS Code `swiftweb.code-snippets` file
-- The SwiftWeb alias block from your shell RC file (`.zshrc` / `.bashrc`)
+- The SwiftWeb alias block from your shell RC file (`.zshrc` / `.bashrc` / `.bash_profile`)
 
 Your existing projects are not touched.
 
