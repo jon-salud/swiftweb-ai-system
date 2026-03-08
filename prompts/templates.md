@@ -10,7 +10,6 @@ Use when: Starting a brand new website from scratch
 
 ---
 
-NEW_SITE_PROMPT = """
 You are building a new website for a SwiftWeb client. Apply all SwiftWeb
 agency standards (SSR rendering, full SEO meta tags, Schema.org JSON-LD,
 llms.txt, CSS-only animations, Lighthouse 95+, Lighthouse a11y 100).
@@ -37,7 +36,6 @@ DELIVER:
 7. Sitemap.xml structure
 
 Framework to use: [Astro / Next.js / Plain HTML]
-"""
 
 ---
 
@@ -47,7 +45,6 @@ Use when: Auditing an existing site for compliance
 
 ---
 
-AUDIT_PROMPT = """
 Audit this website for SwiftWeb agency compliance. Check every item and
 report PASS / FAIL / MISSING with specific fixes for each failure.
 
@@ -67,7 +64,10 @@ SEO META TAGS
 - [ ] Meta description (150-160 chars)
 - [ ] Canonical URL
 - [ ] Open Graph tags (type, url, title, description, image)
+- [ ] og:locale set to en_NZ
 - [ ] Twitter card tags
+- [ ] meta name="robots" content="index, follow"
+- [ ] html lang attribute set
 
 STRUCTURED DATA
 
@@ -97,8 +97,23 @@ ACCESSIBILITY
 - [ ] ARIA labels on nav/sections/footer
 - [ ] Images have alt attributes
 
+SEO CRAWLABILITY
+
+- [ ] robots.txt allows crawlers and references sitemap
+- [ ] sitemap.xml submitted to Google Search Console
+- [ ] sitemap.xml submitted to Bing Webmaster Tools
+
+LIGHTHOUSE ASSERTIONS
+
+- [ ] Performance ≥ 95
+- [ ] Accessibility = 100
+- [ ] Best Practices = 100
+- [ ] SEO = 100
+- [ ] LCP ≤ 2.5s
+- [ ] TBT ≤ 200ms
+- [ ] CLS ≤ 0.1
+
 For each FAIL, provide the exact code fix.
-"""
 
 ---
 
@@ -108,7 +123,6 @@ Use when: Building a single section or component
 
 ---
 
-COMPONENT_PROMPT = """
 Build a [COMPONENT NAME] component for a SwiftWeb client website.
 
 CONTEXT:
@@ -129,7 +143,6 @@ REQUIREMENTS (non-negotiable):
 - Mobile-first responsive
 
 OUTPUT: Complete HTML + CSS for the component only. No external dependencies.
-"""
 
 ---
 
@@ -139,7 +152,6 @@ Use when: Generating structured data for a client
 
 ---
 
-SCHEMA_PROMPT = """
 Generate Schema.org JSON-LD structured data for this SwiftWeb client.
 
 CLIENT INFO:
@@ -161,7 +173,6 @@ specific Schema.org @type appropriate for this business type.
 Also output a LocalBusiness @type as a secondary block if the primary type
 is more specific (e.g. MedicalBusiness).
 Validate that all fields follow Schema.org specifications.
-"""
 
 ---
 
@@ -171,7 +182,6 @@ Use when: Creating the AI optimisation file for a client
 
 ---
 
-LLMS_PROMPT = """
 Write the llms.txt file for this SwiftWeb client website.
 
 This file is placed at [URL]/llms.txt to help AI systems (ChatGPT, Claude,
@@ -212,8 +222,6 @@ Format:
 [Contact details]
 ```
 
-"""
-
 ---
 
 ## TEMPLATE 6: PERFORMANCE FIX
@@ -222,7 +230,6 @@ Use when: Improving Lighthouse scores on an existing site
 
 ---
 
-PERF_FIX_PROMPT = """
 Analyse this website code and fix all Lighthouse performance issues.
 Target: Performance 95+, Accessibility 100, Best Practices 100, SEO 100.
 
@@ -244,4 +251,48 @@ Priority fixes to check:
 - JS-injected meta tags (move to static HTML)
 - Missing or incomplete Schema.org data
 - Missing ai-description meta and llms.txt
-"""
+
+---
+
+## TEMPLATE 7: MIGRATION & REFACTORING
+
+Use when: Migrating an existing site off animation libraries or JS-rendered content
+
+---
+
+Refactor this existing website to comply with SwiftWeb agency standards.
+
+[PASTE CODE OR REPOSITORY URL]
+
+MIGRATION TASKS:
+
+1. ANIMATION LIBRARY REMOVAL
+   - Identify every use of GSAP, AOS, Framer Motion, Animate.css, or similar
+   - Replace each with equivalent CSS keyframe or transition
+   - Replace scroll event listeners with IntersectionObserver
+   - Preserve identical visual behaviour — timing, easing, triggered element
+
+2. SSR / RENDERING FIX
+   - Identify any content injected via JavaScript after page load
+   - Move that content to static HTML (or SSR template)
+   - Meta tags must be in static `<head>`, not set by client-side JS
+
+3. PERFORMANCE
+   - Audit for render-blocking scripts — add defer or type="module"
+   - Add font-display: swap to all @font-face rules
+   - Add width and height to all images
+   - Replace missing WebP images where possible
+
+4. SEO & AIO
+   - Confirm all SEO meta tags are in static HTML (not JS-injected)
+   - Add og:locale="en_NZ" if missing
+   - Add meta name="robots" content="index, follow" if missing
+   - Add ai-description meta tag if missing
+   - Verify llms.txt exists at site root
+
+FOR EACH CHANGE:
+
+1. State the original code
+2. State the replacement code
+3. Confirm no visual regression
+4. Confirm Lighthouse metric improvement (which metric, expected gain)
