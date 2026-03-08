@@ -1,0 +1,60 @@
+{
+  // ── SwiftWeb Agency Configuration ────────────────────────────────────────
+  // Drop this into .vscode/settings.json in every client project
+
+  // GitHub Copilot — inline instructions (supplement to copilot-instructions.md)
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "text": "You are building websites for SwiftWeb, an Auckland web design agency. ALWAYS ensure: (1) All content in raw static HTML - never JS-rendered. (2) Full SEO meta tags in <head> - title, description, canonical, OG, Twitter. (3) Schema.org JSON-LD structured data in <head>. (4) ai-description meta tag and llms.txt file for AI visibility. (5) CSS-only animations - never GSAP/AOS/Framer Motion. (6) IntersectionObserver for scroll effects, never scroll event listeners. (7) font-display:swap on all fonts. (8) Explicit width/height on all images. (9) Semantic HTML5 with ARIA labels. (10) Lighthouse 95+ across all categories."
+    }
+  ],
+
+  "github.copilot.chat.testGeneration.instructions": [
+    {
+      "text": "When generating tests for SwiftWeb projects, include: Lighthouse CI tests (performance>=95, accessibility=100, seo=100), HTML validation tests, meta tag presence checks, and Schema.org validation."
+    }
+  ],
+
+  // Editor settings for clean HTML/CSS work
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.rulers": [80, 120],
+
+  // Prettier config
+  "prettier.singleQuote": true,
+  "prettier.semi": true,
+  "prettier.printWidth": 100,
+
+  // Emmet — auto-include alt on images
+  "emmet.syntaxProfiles": {
+    "html": {
+      "self_closing_tag": "xhtml"
+    }
+  },
+
+  // CSS custom properties intellisense
+  "css.validate": true,
+  "css.lint.unknownAtRules": "ignore",
+
+  // File associations
+  "files.associations": {
+    "*.css": "css",
+    "llms.txt": "plaintext",
+    "robots.txt": "plaintext"
+  },
+
+  // Recommended extensions for SwiftWeb projects
+  // Install with: code --install-extension [id]
+  "extensions.recommendations": [
+    "esbenp.prettier-vscode",          // Code formatting
+    "bradlc.vscode-tailwindcss",       // Tailwind intellisense
+    "formulahendry.auto-rename-tag",   // HTML tag sync
+    "usernamehw.errorlens",            // Inline error display
+    "wayou.vscode-todo-highlight",     // TODO highlighting
+    "ms-vscode.vscode-json",           // JSON schema validation
+    "astro-build.astro-vscode",        // Astro framework support
+    "github.copilot",                  // Copilot
+    "github.copilot-chat"              // Copilot Chat
+  ]
+}
