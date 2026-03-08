@@ -1,10 +1,14 @@
 # SwiftWeb Reusable Prompt Templates
-# Use these in any AI tool: Claude, Copilot Chat, Gemini, ChatGPT
 
-# ─────────────────────────────────────────────────────────────────
-# TEMPLATE 1: NEW CLIENT SITE
-# Use when: Starting a brand new website from scratch
-# ─────────────────────────────────────────────────────────────────
+Use these in any AI tool: Claude, Copilot Chat, Gemini, ChatGPT
+
+---
+
+## TEMPLATE 1: NEW CLIENT SITE
+
+Use when: Starting a brand new website from scratch
+
+---
 
 NEW_SITE_PROMPT = """
 You are building a new website for a SwiftWeb client. Apply all SwiftWeb
@@ -35,10 +39,13 @@ DELIVER:
 Framework to use: [Astro / Next.js / Plain HTML]
 """
 
-# ─────────────────────────────────────────────────────────────────
-# TEMPLATE 2: SEO & AIO AUDIT
-# Use when: Auditing an existing site for compliance
-# ─────────────────────────────────────────────────────────────────
+---
+
+## TEMPLATE 2: SEO & AIO AUDIT
+
+Use when: Auditing an existing site for compliance
+
+---
 
 AUDIT_PROMPT = """
 Audit this website for SwiftWeb agency compliance. Check every item and
@@ -93,10 +100,13 @@ ACCESSIBILITY
 For each FAIL, provide the exact code fix.
 """
 
-# ─────────────────────────────────────────────────────────────────
-# TEMPLATE 3: COMPONENT GENERATION
-# Use when: Building a single section or component
-# ─────────────────────────────────────────────────────────────────
+---
+
+## TEMPLATE 3: COMPONENT GENERATION
+
+Use when: Building a single section or component
+
+---
 
 COMPONENT_PROMPT = """
 Build a [COMPONENT NAME] component for a SwiftWeb client website.
@@ -121,10 +131,13 @@ REQUIREMENTS (non-negotiable):
 OUTPUT: Complete HTML + CSS for the component only. No external dependencies.
 """
 
-# ─────────────────────────────────────────────────────────────────
-# TEMPLATE 4: SCHEMA.ORG GENERATOR
-# Use when: Generating structured data for a client
-# ─────────────────────────────────────────────────────────────────
+---
+
+## TEMPLATE 4: SCHEMA.ORG GENERATOR
+
+Use when: Generating structured data for a client
+
+---
 
 SCHEMA_PROMPT = """
 Generate Schema.org JSON-LD structured data for this SwiftWeb client.
@@ -150,10 +163,13 @@ is more specific (e.g. MedicalBusiness).
 Validate that all fields follow Schema.org specifications.
 """
 
-# ─────────────────────────────────────────────────────────────────
-# TEMPLATE 5: LLMS.TXT GENERATOR
-# Use when: Creating the AI optimisation file for a client
-# ─────────────────────────────────────────────────────────────────
+---
+
+## TEMPLATE 5: LLMS.TXT GENERATOR
+
+Use when: Creating the AI optimisation file for a client
+
+---
 
 LLMS_PROMPT = """
 Write the llms.txt file for this SwiftWeb client website.
@@ -198,10 +214,13 @@ Format:
 
 """
 
-# ─────────────────────────────────────────────────────────────────
-# TEMPLATE 6: PERFORMANCE FIX
-# Use when: Improving Lighthouse scores on an existing site
-# ─────────────────────────────────────────────────────────────────
+---
+
+## TEMPLATE 6: PERFORMANCE FIX
+
+Use when: Improving Lighthouse scores on an existing site
+
+---
 
 PERF_FIX_PROMPT = """
 Analyse this website code and fix all Lighthouse performance issues.

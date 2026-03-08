@@ -12,8 +12,8 @@ Full guidelines: see `SWIFTWEB_GUIDELINES.md` in the project root, or `~/.swiftw
 ## Quick Reference — The Non-Negotiables
 
 1. **RENDERING** — All content in raw HTML. Never JS-rendered.
-2. **META TAGS** — Title, description, canonical, OG, Twitter — all in static <head>
-3. **SCHEMA** — JSON-LD structured data in <head> on every page
+2. **META TAGS** — Title, description, canonical, OG, Twitter — all in static `<head>`
+3. **SCHEMA** — JSON-LD structured data in `<head>` on every page
 4. **AIO** — ai-description meta tag + llms.txt at root + link in footer
 5. **ANIMATIONS** — CSS only. Never GSAP/AOS/Framer Motion. IntersectionObserver for scroll.
 6. **PERFORMANCE** — Lighthouse 95+ required. No render-blocking CSS/JS.
@@ -34,8 +34,9 @@ When asked to start a new site, ALWAYS:
 ## Reviewing Existing Code
 
 When reviewing or editing a site, check:
+
 - Does View Source show full content? (If not — flag as critical issue)
-- Are meta tags complete and in static HTML? 
+- Are meta tags complete and in static HTML?
 - Is there a Schema.org JSON-LD block?
 - Are there animation libraries in package.json? (Flag and offer CSS alternatives)
 - Do images have width/height attributes?
@@ -43,7 +44,7 @@ When reviewing or editing a site, check:
 
 ## File Structure to Create on Every Project
 
-```
+```text
 /
 ├── CLAUDE.md              ← this file (copy to project root)
 ├── SWIFTWEB_GUIDELINES.md ← full guidelines reference
@@ -59,7 +60,7 @@ When reviewing or editing a site, check:
 
 ## robots.txt Template
 
-```
+```text
 User-agent: *
 Allow: /
 Disallow: /admin/
@@ -70,7 +71,7 @@ Sitemap: https://[domain]/sitemap.xml
 
 ## llms.txt Template
 
-```
+```text
 # [Business Name]
 [Business Name] is a [type] business located in [city], New Zealand.
 
@@ -88,7 +89,7 @@ Sitemap: https://[domain]/sitemap.xml
 
 ## Commit Message Convention
 
-```
+```text
 feat: add schema.org structured data to homepage
 fix: move meta tags from JS to static HTML
 perf: replace AOS with CSS IntersectionObserver

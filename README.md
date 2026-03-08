@@ -1,5 +1,6 @@
 # SwiftWeb AI System
-**Agency-wide AI compliance for web design projects**
+
+Agency-wide AI compliance for web design projects
 
 One install. Every AI tool follows your standards automatically.
 
@@ -30,7 +31,7 @@ That's it. All tools are now configured.
 
 ## What Gets Installed & Where
 
-```
+```text
 ~/.claude/
 └── CLAUDE.md                   ← Claude Code reads this automatically
                                    on every session in every project
@@ -53,6 +54,7 @@ Per-project (added by new-project.sh or manually):
 ## Tool-by-Tool Guide
 
 ### Claude Code
+
 **How it works:** Claude Code automatically reads `CLAUDE.md` from the current
 directory, then falls back to `~/.claude/CLAUDE.md`.
 
@@ -64,18 +66,22 @@ You never need to re-explain SSR, meta tags, schema, or animation rules.
 ---
 
 ### VS Code + GitHub Copilot
+
 **How it works:** Copilot reads `.github/copilot-instructions.md` in the
 project root and applies them to all chat and inline suggestions.
 
 **Setup:** `install.sh` installs global snippets. For each project, run:
+
 ```bash
 bash ~/.swiftweb/new-project.sh [project-name]
 ```
+
 This creates the `.github/copilot-instructions.md` and `.vscode/settings.json`.
 
 **VS Code Snippets available after install:**
+
 | Trigger | What it inserts |
-|---------|----------------|
+| --- | --- |
 | `sw-head` | Complete SEO+AIO HTML `<head>` |
 | `sw-reveal` | CSS scroll reveal + IntersectionObserver JS |
 | `sw-schema` | Schema.org JSON-LD block |
@@ -84,10 +90,12 @@ This creates the `.github/copilot-instructions.md` and `.vscode/settings.json`.
 ---
 
 ### Gemini CLI
+
 **How it works:** The `swgem` alias automatically prepends the SwiftWeb
 system prompt to every Gemini CLI call.
 
 **Usage:**
+
 ```bash
 swgem "Build a hero section for a physiotherapy clinic in Hamilton"
 swgem "Audit this site for SEO issues: [paste HTML]"
@@ -95,6 +103,7 @@ swgem "Generate Schema.org JSON-LD for a restaurant in Christchurch"
 ```
 
 **Direct usage without alias:**
+
 ```bash
 gemini --system-prompt "$(cat ~/.swiftweb/gemini-system.md)" "your prompt"
 ```
@@ -102,9 +111,11 @@ gemini --system-prompt "$(cat ~/.swiftweb/gemini-system.md)" "your prompt"
 ---
 
 ### Any Other AI Tool (ChatGPT, Perplexity, etc.)
+
 Use the prompt templates in `~/.swiftweb/templates.md`.
 
 Six templates cover all common scenarios:
+
 1. **New Client Site** — full site from a brief
 2. **SEO & AIO Audit** — compliance checklist against existing code
 3. **Component Generation** — individual section with brand context
@@ -122,7 +133,8 @@ cd acme-plumbing
 ```
 
 This scaffolds:
-```
+
+```text
 acme-plumbing/
 ├── CLAUDE.md                    ← Project AI instructions
 ├── SWIFTWEB_GUIDELINES.md
@@ -151,6 +163,7 @@ npx @lhci/cli autorun
 ```
 
 The config enforces hard failures if scores drop below:
+
 - Performance: 95
 - Accessibility: 100
 - Best Practices: 100
@@ -173,7 +186,7 @@ immediately on the next `claude` session.
 
 ## The Architecture Explained
 
-```
+```text
 SWIFTWEB_GUIDELINES.md          ← Single source of truth
         │
         ├── ~/.claude/CLAUDE.md          → Claude Code (auto-loaded)
